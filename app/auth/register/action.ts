@@ -1,3 +1,5 @@
+'use server';
+
 import { hash } from 'bcrypt-ts';
 
 import prisma from '@/lib/db';

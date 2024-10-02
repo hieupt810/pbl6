@@ -12,6 +12,7 @@ import registerHandler from './action';
 
 import { FormInput } from '@/components/input';
 import { title } from '@/components/primitives';
+import { showToast, ToastType } from '@/lib/toast';
 import { RegisterSchema, RegisterType } from '@/types/RegisterSchema';
 
 export default function RegisterPage() {
@@ -35,7 +36,16 @@ export default function RegisterPage() {
 
         const res = await registerHandler(formData);
 
-        if (res && res.status === 200) router.push('/auth/login');
+        if (res && res.status === 200) {
+            showToast('Account created successfully!', ToastType.success);
+            router.push('/auth/login');
+        } else {
+            showToast(
+                res.message ||
+                    'An error occurred while creating your account. Please try again.',
+                ToastType.error,
+            );
+        }
     }
 
     return (
@@ -89,11 +99,11 @@ export default function RegisterPage() {
                 </form>
             </CardBody>
 
-            <Divider />
+            <Divider className="mt-4" />
 
-            <CardFooter className="justify-center gap-1">
+            <CardFooter className="justify-center gap-1 py-5 text-sm">
                 <span>Already have an account?</span>
-                <Link href="/auth/login" underline="hover">
+                <Link href="/auth/login" size="sm" underline="hover">
                     Login
                 </Link>
                 <span>here.</span>

@@ -2,6 +2,8 @@ import '@/styles/globals.css';
 import { Link } from '@nextui-org/link';
 import clsx from 'clsx';
 import { Metadata, Viewport } from 'next';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import { Providers } from './providers';
 
@@ -45,10 +47,13 @@ export default function RootLayout({
                     themeProps={{ attribute: 'class', defaultTheme: 'dark' }}
                 >
                     <div className="relative flex h-screen flex-col">
+                        <ToastContainer />
                         <Navbar />
+
                         <main className="container mx-auto max-w-7xl flex-grow px-6 pt-16">
                             {children}
                         </main>
+
                         <footer className="flex w-full items-center justify-center py-3">
                             <Link
                                 isExternal

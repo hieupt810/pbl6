@@ -12,6 +12,7 @@ import loginHandler from './action';
 
 import { FormInput } from '@/components/input';
 import { title } from '@/components/primitives';
+import { showToast, ToastType } from '@/lib/toast';
 import { LoginSchema, LoginType } from '@/types/LoginSchema';
 
 export default function LoginPage() {
@@ -35,7 +36,16 @@ export default function LoginPage() {
 
         const res = await loginHandler(formData);
 
-        if (res && res.status === 200) router.push('/');
+        if (res && res.status === 200) {
+            showToast('Logged in successfully!', ToastType.success);
+            router.push('/');
+        } else {
+            showToast(
+                res.message ||
+                    'An error occurred while logging in. Please try again.',
+                ToastType.error,
+            );
+        }
     }
 
     return (
@@ -80,11 +90,11 @@ export default function LoginPage() {
                 </form>
             </CardBody>
 
-            <Divider />
+            <Divider className="mt-4" />
 
-            <CardFooter className="justify-center gap-1">
+            <CardFooter className="justify-center gap-1 py-5 text-sm">
                 <span>Don&apos;t have an account?</span>
-                <Link href="/auth/register" underline="hover">
+                <Link href="/auth/register" size="sm" underline="hover">
                     Register
                 </Link>
                 <span>here.</span>

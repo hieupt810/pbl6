@@ -15,7 +15,7 @@ import { link as linkStyles } from '@nextui-org/theme';
 import clsx from 'clsx';
 import NextLink from 'next/link';
 
-import { HeartFilledIcon, Logo, SearchIcon } from '@/components/icons';
+import { Logo, SearchIcon } from '@/components/icons';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { siteConfig } from '@/config/site';
 
@@ -78,21 +78,26 @@ export const Navbar = () => {
                 <NavbarItem className="hidden gap-2 sm:flex">
                     <ThemeSwitch />
                 </NavbarItem>
-                <NavbarItem className="hidden lg:flex">
-                    {searchInput}
-                </NavbarItem>
+
                 <NavbarItem className="hidden md:flex">
                     <Button
-                        isExternal
                         as={Link}
-                        className="bg-default-100 text-sm font-normal text-default-600"
-                        href={siteConfig.links.sponsor}
-                        startContent={
-                            <HeartFilledIcon className="text-danger" />
-                        }
-                        variant="flat"
+                        color="primary"
+                        href={siteConfig.links.login}
+                        variant="solid"
                     >
-                        Sponsor
+                        Log in
+                    </Button>
+                </NavbarItem>
+
+                <NavbarItem className="hidden md:flex">
+                    <Button
+                        as={Link}
+                        color="secondary"
+                        href={siteConfig.links.register}
+                        variant="solid"
+                    >
+                        Register
                     </Button>
                 </NavbarItem>
             </NavbarContent>
