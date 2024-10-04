@@ -1,6 +1,4 @@
 import { Button } from '@nextui-org/button';
-import { Input } from '@nextui-org/input';
-import { Kbd } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
 import {
     NavbarBrand,
@@ -12,34 +10,17 @@ import {
     Navbar as NextUINavbar,
 } from '@nextui-org/navbar';
 import { link as linkStyles } from '@nextui-org/theme';
+import { User } from '@nextui-org/user';
 import clsx from 'clsx';
 import NextLink from 'next/link';
 
-import { Logo, SearchIcon } from '@/components/icons';
+import { Logo } from '@/components/icons';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { siteConfig } from '@/config/site';
+import { getSessionDetail } from '@/utils/session';
 
-export const Navbar = () => {
-    const searchInput = (
-        <Input
-            aria-label="Search"
-            classNames={{
-                inputWrapper: 'bg-default-100',
-                input: 'text-sm',
-            }}
-            endContent={
-                <Kbd className="hidden lg:inline-block" keys={['command']}>
-                    K
-                </Kbd>
-            }
-            labelPlacement="outside"
-            placeholder="Search..."
-            startContent={
-                <SearchIcon className="pointer-events-none flex-shrink-0 text-base text-default-400" />
-            }
-            type="search"
-        />
-    );
+export const Navbar = async () => {
+    const session = await getSessionDetail();
 
     return (
         <NextUINavbar maxWidth="xl" position="sticky">
@@ -79,27 +60,41 @@ export const Navbar = () => {
                     <ThemeSwitch />
                 </NavbarItem>
 
-                <NavbarItem className="hidden md:flex">
-                    <Button
-                        as={Link}
-                        color="primary"
-                        href={siteConfig.links.login}
-                        variant="solid"
-                    >
-                        Log in
-                    </Button>
-                </NavbarItem>
+                {session ? (
+                    <NavbarItem className="hidden md:flex">
+                        <User
+                            avatarProps={{
+                                src: '/avatar.png',
+                            }}
+                            description={session.role}
+                            name={session.email}
+                        />
+                    </NavbarItem>
+                ) : (
+                    <>
+                        <NavbarItem className="hidden md:flex">
+                            <Button
+                                as={Link}
+                                color="primary"
+                                href={siteConfig.links.login}
+                                variant="solid"
+                            >
+                                Log in
+                            </Button>
+                        </NavbarItem>
 
-                <NavbarItem className="hidden md:flex">
-                    <Button
-                        as={Link}
-                        color="secondary"
-                        href={siteConfig.links.register}
-                        variant="solid"
-                    >
-                        Register
-                    </Button>
-                </NavbarItem>
+                        <NavbarItem className="hidden md:flex">
+                            <Button
+                                as={Link}
+                                color="secondary"
+                                href={siteConfig.links.register}
+                                variant="solid"
+                            >
+                                Register
+                            </Button>
+                        </NavbarItem>
+                    </>
+                )}
             </NavbarContent>
 
             <NavbarContent className="basis-1 pl-4 sm:hidden" justify="end">
@@ -108,7 +103,6 @@ export const Navbar = () => {
             </NavbarContent>
 
             <NavbarMenu>
-                {searchInput}
                 <div className="mx-4 mt-2 flex flex-col gap-2">
                     {siteConfig.navMenuItems.map((item, index) => (
                         <NavbarMenuItem key={`${item}-${index}`}>

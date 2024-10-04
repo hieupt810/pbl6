@@ -1,20 +1,25 @@
 services:
-    postgres:
+    pg:
         image: postgres:15
-        restart: always
+        container_name: pg
+        restart: unless-stopped
         ports:
             - 3001:5432
+        env_file:
+            - .env
         environment:
-            - POSTGRES_USER=${POSTGRES_USER-username}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD-password}
+            - POSTGRES_DB=pg
+            - POSTGRES_USER=admin
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD-example}
         volumes:
-            - postgres:/var/lib/postgresql/data
-        healthcheck:
-            test: [ "CMD-SHELL", "pg_isready" ]
-            interval: 1m30s
-            timeout: 30s
-            retries: 5
-            start_period: 30s
+            - pgdata:/var/lib/postgresql/data
+        networks:
+            - container_network
 
 volumes:
-    postgres:
+    pgdata:
+
+
+networks:
+    container_network:
+        driver: bridge

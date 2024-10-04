@@ -4,8 +4,8 @@ import { Role } from '@prisma/client';
 import { jwtVerify, SignJWT } from 'jose';
 import { cookies } from 'next/headers';
 
+import prisma from '@/lib/db';
 import SessionPayload from '@/types/SessionPayload';
-
 import 'server-only';
 
 const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET);
@@ -55,4 +55,22 @@ export async function updateSession() {
 
 export async function deleteSession() {
     cookies().delete('Authorization');
+}
+
+export async function getSessionDetail() {
+    const session = cookies().get('Authorization')?.value;
+    const payload = await decrypt(session);
+
+    if (payload) {
+        const user = await prisma.user.findUnique({
+            where: { id: payload.id, deletedAt: null },
+            select: { email: true, role: true },
+        });
+
+        if (!user) return null;
+
+        return { email: user.email, role: user.role };
+    }
+
+    return null;
 }

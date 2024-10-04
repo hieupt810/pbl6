@@ -14,15 +14,15 @@ datasource db {
 }
 
 enum Role {
-    ADMIN
-    USER
+    Administrator
+    User
 }
 
 model User {
     id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     email     String    @unique
     password  String
-    role      Role      @default(USER)
+    role      Role      @default(User)
     createdAt DateTime  @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
