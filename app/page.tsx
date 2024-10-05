@@ -1,21 +1,16 @@
-import { subtitle, title } from '@/components/primitives';
+import CardList from '@/components/card-list';
+import prisma from '@/lib/db';
 
-export default function Home() {
+export default async function Home() {
+    const products = await prisma.product.findMany({
+        where: { deletedAt: null },
+        orderBy: { createdAt: 'desc' },
+        take: 16,
+    });
+
     return (
-        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-            <div className="inline-block max-w-xl justify-center text-center">
-                <span className={title()}>Make&nbsp;</span>
-                <span className={title({ color: 'violet' })}>
-                    beautiful&nbsp;
-                </span>
-                <br />
-                <span className={title()}>
-                    websites regardless of your design experience.
-                </span>
-                <div className={subtitle({ class: 'mt-4' })}>
-                    Beautiful, fast and modern React UI library.
-                </div>
-            </div>
+        <section className="flex flex-col items-center justify-center gap-4">
+            <CardList products={products} />
         </section>
     );
 }
